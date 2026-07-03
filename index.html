@@ -772,6 +772,17 @@
             0%, 100% { opacity: 0; transform: scale(0); }
             50% { opacity: 1; transform: scale(1); }
         }
+
+        /* ===== YOUTUBE PLAYER (hidden) ===== */
+        #yt-player {
+            position: fixed;
+            bottom: -9999px;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -784,10 +795,8 @@
         <svg id="pauseIcon" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
     </button>
 
-    <!-- Audio Element -->
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
+    <!-- Hidden YouTube Player for "I See the Light" Instrumental -->
+    <div id="yt-player"></div>
 
     <!-- ===== HERO SECTION ===== -->
     <section class="hero">
@@ -941,7 +950,7 @@
                 <div class="gallery-item fade-in">
                     <div class="gallery-visual">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c0-3.87-3.13-7-7-7zm0 9.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
                         </svg>
                     </div>
                     <div class="gallery-caption">Growing Wings</div>
@@ -1118,7 +1127,34 @@
         <p class="footer-text">18th Debut Celebration</p>
     </footer>
 
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
+        // ===== YOUTUBE PLAYER SETUP =====
+        let ytPlayer;
+        let isPlaying = false;
+
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('yt-player', {
+                videoId: 'BylEcyhS3xo',
+                playerVars: {
+                    autoplay: 0,
+                    loop: 1,
+                    playlist: 'BylEcyhS3xo',
+                    controls: 0,
+                    showinfo: 0,
+                    rel: 0,
+                    modestbranding: 1,
+                    iv_load_policy: 3
+                },
+                events: {
+                    onReady: function(event) {
+                        event.target.setVolume(50);
+                    }
+                }
+            });
+        }
+
         // ===== PARTICLE SYSTEM =====
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
@@ -1258,19 +1294,19 @@
 
         // ===== MUSIC PLAYER =====
         const musicBtn = document.getElementById('musicBtn');
-        const bgMusic = document.getElementById('bgMusic');
         const playIcon = document.getElementById('playIcon');
         const pauseIcon = document.getElementById('pauseIcon');
-        let isPlaying = false;
 
         musicBtn.addEventListener('click', () => {
+            if (!ytPlayer || !ytPlayer.playVideo) return;
+            
             if (isPlaying) {
-                bgMusic.pause();
+                ytPlayer.pauseVideo();
                 playIcon.style.display = 'block';
                 pauseIcon.style.display = 'none';
                 musicBtn.style.animation = 'musicPulse 2s infinite';
             } else {
-                bgMusic.play().catch(e => console.log('Audio play failed:', e));
+                ytPlayer.playVideo();
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'block';
                 musicBtn.style.animation = 'none';
