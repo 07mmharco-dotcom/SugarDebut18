@@ -772,18 +772,6 @@
             0%, 100% { opacity: 0; transform: scale(0); }
             50% { opacity: 1; transform: scale(1); }
         }
-
-        /* ===== YOUTUBE IFRAME (hidden) ===== */
-        #music-iframe {
-            position: fixed;
-            bottom: -9999px;
-            left: -9999px;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-            pointer-events: none;
-            border: none;
-        }
     </style>
 </head>
 <body>
@@ -795,14 +783,6 @@
         <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         <svg id="pauseIcon" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
     </button>
-
-    <!-- Hidden YouTube Iframe for "I See the Light" Instrumental -->
-    <iframe 
-        id="music-iframe"
-        src="https://www.youtube.com/embed/BylEcyhS3xo?enablejsapi=1&autoplay=0&loop=1&playlist=BylEcyhS3xo&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3"
-        allow="autoplay"
-        title="I See The Light - Tangled Piano Instrumental">
-    </iframe>
 
     <!-- ===== HERO SECTION ===== -->
     <section class="hero">
@@ -1273,29 +1253,38 @@
 
         // ===== MUSIC PLAYER =====
         const musicBtn = document.getElementById('musicBtn');
-        const musicIframe = document.getElementById('music-iframe');
         const playIcon = document.getElementById('playIcon');
         const pauseIcon = document.getElementById('pauseIcon');
         let isPlaying = false;
+        let audioPlayer = null;
 
-        musicBtn.addEventListener('click', () => {
+        musicBtn.addEventListener('click', async () => {
             if (isPlaying) {
-                // Pause: reload iframe to stop audio
-                const currentSrc = musicIframe.src;
-                musicIframe.src = '';
-                setTimeout(() => {
-                    musicIframe.src = currentSrc;
-                }, 100);
+                // Stop
+                if (audioPlayer) {
+                    audioPlayer.pause();
+                    audioPlayer = null;
+                }
                 playIcon.style.display = 'block';
                 pauseIcon.style.display = 'none';
                 musicBtn.style.animation = 'musicPulse 2s infinite';
             } else {
-                // Play: trigger autoplay by updating src
-                musicIframe.src = 'https://www.youtube.com/embed/BylEcyhS3xo?autoplay=1&loop=1&playlist=BylEcyhS3xo&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3';
-                playIcon.style.display = 'none';
-                pauseIcon.style.display = 'block';
-                musicBtn.style.animation = 'none';
-                musicBtn.style.boxShadow = '0 0 30px rgba(212, 175, 55, 0.8)';
+                // Play - create new audio element on each click to bypass autoplay blocks
+                audioPlayer = new Audio();
+                audioPlayer.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
+                audioPlayer.loop = true;
+                audioPlayer.volume = 0.5;
+                
+                try {
+                    await audioPlayer.play();
+                    playIcon.style.display = 'none';
+                    pauseIcon.style.display = 'block';
+                    musicBtn.style.animation = 'none';
+                    musicBtn.style.boxShadow = '0 0 30px rgba(212, 175, 55, 0.8)';
+                } catch (e) {
+                    console.log('Audio play failed:', e);
+                    audioPlayer = null;
+                }
             }
             isPlaying = !isPlaying;
         });
