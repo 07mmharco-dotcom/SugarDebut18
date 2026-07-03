@@ -1260,7 +1260,6 @@
 
         musicBtn.addEventListener('click', async () => {
             if (isPlaying) {
-                // Stop
                 if (audioPlayer) {
                     audioPlayer.pause();
                     audioPlayer = null;
@@ -1269,9 +1268,9 @@
                 pauseIcon.style.display = 'none';
                 musicBtn.style.animation = 'musicPulse 2s infinite';
             } else {
-                // Play - create new audio element on each click to bypass autoplay blocks
                 audioPlayer = new Audio();
-                audioPlayer.src = 'https://voca.ro/1bmOmwcOfMux.mp3';
+                audioPlayer.src = 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Tours/Enthusiast/Tours_-_01_-_Enthusiast.mp3';
+                audioPlayer.loop = true;
                 audioPlayer.volume = 0.5;
                 
                 try {
