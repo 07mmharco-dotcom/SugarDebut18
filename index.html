@@ -773,7 +773,6 @@
             50% { opacity: 1; transform: scale(1); }
         }
     </style>
-<base target="_blank">
 </head>
 <body>
     <!-- Particle Canvas -->
@@ -912,7 +911,7 @@
                     </div>
                     <div class="detail-label">Venue</div>
                     <div class="detail-value">
-                        Angelis Resort
+                        Angelis Resort — Pool 7
                         <small>151 Rizal St, Poblacion, Muntinlupa, 1774 Metro Manila</small>
                     </div>
                 </div>
@@ -1006,7 +1005,7 @@
                 </iframe>
             </div>
             <div class="venue-address fade-in">
-                <strong>Angelis Resort</strong><br>
+                <strong>Angelis Resort — Pool 7</strong><br>
                 151 Rizal St, Poblacion<br>
                 Muntinlupa, 1774 Metro Manila
             </div>
@@ -1154,7 +1153,7 @@
                 this.x += this.speedX;
                 this.y += this.speedY;
                 this.twinkle += this.twinkleSpeed;
-
+                
                 if (this.y < -10 || this.x < -10 || this.x > width + 10) {
                     this.reset();
                     this.y = height + 10;
@@ -1165,7 +1164,7 @@
                 const alpha = this.opacity * (0.5 + 0.5 * Math.sin(this.twinkle));
                 ctx.save();
                 ctx.globalAlpha = alpha;
-
+                
                 const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 4);
                 gradient.addColorStop(0, this.color);
                 gradient.addColorStop(0.5, this.color + '40');
@@ -1174,12 +1173,12 @@
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
                 ctx.fill();
-
+                
                 ctx.fillStyle = '#fff5cc';
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
-
+                
                 ctx.restore();
             }
         }
@@ -1208,7 +1207,7 @@
             butterfly.style.animationDuration = (Math.random() * 8 + 10) + 's';
             butterfly.style.animationDelay = Math.random() * 5 + 's';
             document.body.appendChild(butterfly);
-
+            
             setTimeout(() => butterfly.remove(), 20000);
         }
 
